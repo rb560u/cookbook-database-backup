@@ -1,0 +1,54 @@
+#!/usr/bin/env bash
+
+# Copyright 2012-2013 AT&T
+# All Rights Reserved.
+#
+#    Licensed under the Apache License, Version 2.0 (the "License"); you may
+#    not use this file except in compliance with the License. You may obtain
+#    a copy of the License at
+#
+#         http://www.apache.org/licenses/LICENSE-2.0
+#
+#    Unless required by applicable law or agreed to in writing, software
+#    distributed under the License is distributed on an "AS IS" BASIS, WITHOUT
+#    WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied. See the
+#    License for the specific language governing permissions and limitations
+#    under the License.
+
+# Backs up all databases on the host, creates an archive of the backup
+# directory and then stores the tarball in STaaS. Afterwards, does some
+# cleanup of the backups directory if needed.
+
+BACKUP_DIR=<%= node['database-backup']['backup-dir'] %>
+BACKUP_LOG=database-backup.log
+NUM_TO_KEEP=<%= node['database-backup']['number-keep-local'] %>
+
+innobackupex --user=<%= node['database-backup']['mysql']['user'] %> --password=<%= @mysql_pass %> $BACKUP_DIR > $BACKUP_LOG
+
+BACKUP_RETURN_CODE=$?
+
+if [[ $BACKUP_RETURN_CODE != 0 ]]; then
+  print "There was an error backing up the databases. Return code was $BACKUP_RETURN_CODE. Please check log file.\n"
+  exit $BACKUP_RETURN_CODE
+fi
+
+LATEST_BACKUP=`ls -t $BACKUP_DIR | head -1`
+
+print "Archiving $LATEST_BACKUP...\n"
+cd $BACKUP_DIR
+tar -zcf /tmp/$LATEST_BACKUP.tar.gz $LATEST_BACKUP
+
+print "Sending backup archive offsite...\n"
+#TODO
+
+rm /tmp/$LATEST_BACKUP.tar.gz
+
+print "Clearing earliest backup directories...\n"
+NUM_LOCAL_BACKUPS=`ls -l $BACKUP_DIR | grep '^d' | wc -l`
+while [ $NUM_LOCAL_BACKUPS -gt $NUM_TO_KEEP ]
+do
+  EARLIEST_BACKUP=`ls -tr $BACKUP_DIR | head -1`
+  print "Deleting $EARLIEST_BACKUP...\n"
+  rm -rf "$BACKUP_DIR/$EARLIEST_BACKUP"
+  NUM_LOCAL_BACKUPS=`ls -l $BACKUP_DIR | grep '^d' | wc -l`
+done

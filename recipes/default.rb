@@ -65,10 +65,42 @@ when "rhel"
   package "percona-xtrabackup"
 end
 
+group node['database-backup']['group'] do
+  action :create
+end
+
+user node['database-backup']['user'] do
+  gid node['database-backup']['group']
+  shell "/bin/bash"
+  system true
+  action :create
+end
+
+directory node['database-backup']['backup-dir'] do
+  owner node['database-backup']['user']
+  group node['database-backup']['group']
+  mode 00700
+end
+
+gem_package "synaptic4r" do
+  action :install
+end
+
 mysql_user = node['database-backup']['mysql']['user']
 key_path = "/etc/chef/encrypted_data_bag_secret"
 secret = ::Chef::EncryptedDataBagItem.load_secret key_path
 mysql_pass = ::Chef::EncryptedDataBagItem.load('user_passwords', mysql_user, secret)[mysql_user]
+staas_secret = ::Chef::EncryptedDataBagItem.load('secrets', 'staas_secret', secret)['staas_secret']
+
+template "/home/#{node['database-backup']['user']}/.synaptic4r" do
+  source ".synaptic4r.erb"
+  owner node['database-backup']['user']
+  group node['database-backup']['group']
+  mode   00600
+  variables(
+    "staas_secret" => staas_secret
+  )
+end
 
 template "/opt/scripts/backup_databases" do
   source "backup_databases.bash.erb"

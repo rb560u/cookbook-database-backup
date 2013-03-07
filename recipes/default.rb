@@ -25,7 +25,7 @@ when "debian"
     uri "http://repo.percona.com/apt"
     distribution node["lsb"]["codename"]
     components ["main"]
-    keyserver node["percona"]["keyserver"]
+    keyserver "keys.gnupg.net"
     key "1C4CBDCDCD2EFD2A"
     action :add
     notifies :run, "execute[apt-get update]", :immediately
@@ -72,7 +72,7 @@ end
 user node['database-backup']['user'] do
   gid node['database-backup']['group']
   shell "/bin/bash"
-  system true
+  home "/home/#{node['database-backup']['user']}"
   action :create
 end
 
@@ -102,7 +102,7 @@ template "/home/#{node['database-backup']['user']}/.synaptic4r" do
   )
 end
 
-template "/opt/scripts/backup_databases" do
+template "#{node['database-backup']['backup-dir']}/backup_databases" do
   source "backup_databases.bash.erb"
   owner node['database-backup']['user']
   group node['database-backup']['group']

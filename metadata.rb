@@ -10,4 +10,6 @@ recipe           "database-backup", "Installs Percona XtraBackup and sets up bac
 
 supports         "ubuntu", ">= 12.04"
 
+depends          "cron"
 depends          "rsync"
+depends          "rubygems"

@@ -11,8 +11,9 @@ Requirements
 ============
 
 * Chef 0.8+
-* rsync
 * cron
+* rsync
+* rubygems
 
 Attributes
 ==========

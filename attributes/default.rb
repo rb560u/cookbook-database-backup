@@ -17,8 +17,6 @@
 # limitations under the License.
 #
 
-default['database-backup']['user'] = 'mysqlbackup'  # Executes the backup script
-default['database-backup']['group'] = 'mysqlbackup'
 default['database-backup']['mysql']['user'] = 'mysqlbackup'
 default['database-backup']['backup-dir'] = '/var/backups'
 default['database-backup']['staas']['account'] = 'silverlining'

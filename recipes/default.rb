@@ -30,14 +30,14 @@ when "debian"
     action :add
     notifies :run, "execute[apt-get update]", :immediately
   end
-  
+
   # Pin this repo as to avoid conflicts with others
   apt_preference "00percona" do
     package_name "*"
     pin " release o=Percona Development Team"
     pin_priority "1001"
   end
-  
+
   # install dependent package
   package "libmysqlclient-dev" do
     options "--force-yes"
@@ -65,20 +65,9 @@ when "rhel"
   package "percona-xtrabackup"
 end
 
-group node['database-backup']['group'] do
-  action :create
-end
-
-user node['database-backup']['user'] do
-  gid node['database-backup']['group']
-  shell "/bin/bash"
-  home "/home/#{node['database-backup']['user']}"
-  action :create
-end
-
 directory node['database-backup']['backup-dir'] do
-  owner node['database-backup']['user']
-  group node['database-backup']['group']
+  owner "root"
+  group "root"
   mode 00700
 end
 
@@ -92,10 +81,10 @@ secret = ::Chef::EncryptedDataBagItem.load_secret key_path
 mysql_pass = ::Chef::EncryptedDataBagItem.load('user_passwords', mysql_user, secret)[mysql_user]
 staas_secret = ::Chef::EncryptedDataBagItem.load('secrets', 'staas_secret', secret)['staas_secret']
 
-template "/home/#{node['database-backup']['user']}/.synaptic4r" do
+template "/root/.synaptic4r" do
   source ".synaptic4r.erb"
-  owner node['database-backup']['user']
-  group node['database-backup']['group']
+  owner "root"
+  group "root"
   mode   00600
   variables(
     "staas_secret" => staas_secret
@@ -104,8 +93,8 @@ end
 
 template "#{node['database-backup']['backup-dir']}/backup_databases" do
   source "backup_databases.bash.erb"
-  owner node['database-backup']['user']
-  group node['database-backup']['group']
+  owner "root"
+  group "root"
   mode   00700  # The script has the backup MySQL user password, so only owner should read.
   variables(
     "mysql_pass" => mysql_pass
@@ -115,6 +104,6 @@ end
 cron_d "backup_databases" do
   minute node['database-backup']['cron']['minute']
   hour node['database-backup']['cron']['hour']
-  command "/opt/scripts/backup_databases"
-  user node['database-backup']['user']
+  command "#{node['database-backup']['backup-dir']}/backup_databases"
+  user "root"
 end

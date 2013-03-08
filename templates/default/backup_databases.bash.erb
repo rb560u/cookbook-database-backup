@@ -29,26 +29,26 @@ innobackupex --user=<%= node['database-backup']['mysql']['user'] %> --password=<
 BACKUP_RETURN_CODE=$?
 
 if [[ $BACKUP_RETURN_CODE != 0 ]]; then
-  print "There was an error backing up the databases. Return code was $BACKUP_RETURN_CODE. Please check log file.\n"
+  echo "There was an error backing up the databases. Return code was $BACKUP_RETURN_CODE. Please check log file."
   exit $BACKUP_RETURN_CODE
 fi
 
 LATEST_BACKUP=`ls -t $BACKUP_DIR | head -1`
 
-print "Archiving $LATEST_BACKUP...\n"
+echo "Archiving $LATEST_BACKUP..."
 cd $BACKUP_DIR
 tar -zcf /tmp/$LATEST_BACKUP.tar.gz $LATEST_BACKUP
 
-print "Sending backup archive offsite...\n"
+echo "Sending backup archive offsite..."
 synrest create-file /tmp/$LATEST_BACKUP.tar.gz $STAAS_DIR/
 rm /tmp/$LATEST_BACKUP.tar.gz
 
-print "Clearing earliest backup directories...\n"
+echo "Clearing earliest backup directories..."
 NUM_LOCAL_BACKUPS=`ls -l $BACKUP_DIR | grep '^d' | wc -l`
 while [ $NUM_LOCAL_BACKUPS -gt $NUM_TO_KEEP ]
 do
   EARLIEST_BACKUP=`ls -tr $BACKUP_DIR | head -1`
-  print "Deleting $EARLIEST_BACKUP...\n"
+  echo "Deleting $EARLIEST_BACKUP..."
   rm -rf "$BACKUP_DIR/$EARLIEST_BACKUP"
   NUM_LOCAL_BACKUPS=`ls -l $BACKUP_DIR | grep '^d' | wc -l`
 done

@@ -71,6 +71,8 @@ directory node['database-backup']['backup-dir'] do
   mode 00700
 end
 
+package "rubygems"
+
 gem_package "synaptic4r" do
   action :install
 end
@@ -101,7 +103,7 @@ template "#{node['database-backup']['backup-dir']}/backup_databases" do
   )
 end
 
-cron_d "backup_databases" do
+cron "backup_databases" do
   minute node['database-backup']['cron']['minute']
   hour node['database-backup']['cron']['hour']
   command "#{node['database-backup']['backup-dir']}/backup_databases"

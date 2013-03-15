@@ -22,7 +22,7 @@ exec 2>&1
 # directory and then stores the tarball in STaaS. Afterwards, does some
 # cleanup of the backups directory if needed.
 
-PATH="$PATH:<%= node['database-backup']['synrest-path'] %>"
+PATH="$PATH:/usr/local/bin"
 BACKUP_DIR=<%= node['database-backup']['backup-dir'] %>
 STAAS_DIR=<%= node['database-backup']['staas']['directory'] %>
 BACKUP_LOG=database-backup.log

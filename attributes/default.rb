@@ -26,6 +26,3 @@ default['database-backup']['staas']['directory'] = '<ZONE>'
 default['database-backup']['cron']['minute'] = 0
 default['database-backup']['cron']['hour'] = '*'
 default['database-backup']['number-keep-local'] = 6
-
-# Path where the synrest command is installed by the gem
-default['database-backup']['synrest-path'] = "/usr/local/bin"

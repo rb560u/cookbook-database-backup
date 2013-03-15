@@ -1,6 +1,9 @@
 #!/usr/bin/env bash
 
-# Copyright 2013 AT&T
+exec > /tmp/backup_databases.output
+exec 2>&1
+
+ Copyright 2013 AT&T
 # All Rights Reserved.
 #
 #    Licensed under the Apache License, Version 2.0 (the "License"); you may
@@ -19,6 +22,7 @@
 # directory and then stores the tarball in STaaS. Afterwards, does some
 # cleanup of the backups directory if needed.
 
+PATH="$PATH:<%= node['database-backup']['synrest-path'] %>"
 BACKUP_DIR=<%= node['database-backup']['backup-dir'] %>
 STAAS_DIR=<%= node['database-backup']['staas']['directory'] %>
 BACKUP_LOG=database-backup.log

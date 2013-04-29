@@ -28,7 +28,7 @@ STAAS_DIR=<%= node['database-backup']['staas']['directory'] %>
 BACKUP_LOG=database-backup.log
 NUM_TO_KEEP=<%= node['database-backup']['number-keep-local'] %>
 
-innobackupex --user=<%= node['database-backup']['mysql']['user'] %> --password=<%= @mysql_pass %> $BACKUP_DIR > $BACKUP_LOG
+innobackupex --user='<%= node['database-backup']['mysql']['user'] %>' --password='<%= @mysql_pass %>' $BACKUP_DIR > $BACKUP_LOG
 
 BACKUP_RETURN_CODE=$?
 

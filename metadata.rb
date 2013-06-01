@@ -9,3 +9,6 @@ version          "0.0.1"
 recipe           "database-backup", "Installs Percona XtraBackup and sets up backups"
 
 supports         "ubuntu", ">= 12.04"
+
+depends "apt"
+depends "yum"

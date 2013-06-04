@@ -84,7 +84,7 @@ mysql_pass = ::Chef::EncryptedDataBagItem.load('user_passwords', mysql_user, sec
 staas_secret = ::Chef::EncryptedDataBagItem.load('secrets', 'staas_secret', secret)['staas_secret']
 
 template "/root/.synaptic4r" do
-  source ".synaptic4r.erb"
+  source "synaptic4r.erb"
   owner "root"
   group "root"
   mode   00600

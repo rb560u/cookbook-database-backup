@@ -71,8 +71,6 @@ directory node['database-backup']['backup-dir'] do
   mode 00700
 end
 
-package "rubygems"
-
 gem_package "synaptic4r" do
   action :install
 end

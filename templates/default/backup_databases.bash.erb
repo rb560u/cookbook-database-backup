@@ -39,6 +39,27 @@ fi
 
 LATEST_BACKUP=`ls -t $BACKUP_DIR | head -1`
 
+# (alanmeadows) we also take a dump of every database we find in the innobackup
+# because we're paranoid, and innobackups have failed to restore in the past
+MYCNFOK=1
+if [ ! -e /root/.my.cnf ]; then
+   MYCNFOK=0
+   echo "The file /root/.my.cnf does not exist, and is required to run mysqldump"
+   if ! grep -q mysqldump /root/.my.cnf; then
+     MYCNFOK=0
+     echo "The file /root/.my.cnf does not contain credentials for mysqldump which is required"
+   fi;
+fi;
+if [ $MYCNFOK -eq 1 ]; then
+  OLD_PWD=$(pwd)
+  cd $BACKUP_DIR/$LATEST_BACKUP
+  for db in `find . -type d | sed "s/.\///" | grep -v -E '^.$'`;
+  do
+     mysqldump --defaults-extra-file=/root/.my.cnf --add-drop-table $db | gzip --fast > $db.gz
+  done
+  cd $OLD_PWD
+fi;
+
 echo "Archiving $LATEST_BACKUP..."
 cd $BACKUP_DIR
 tar -zcf /tmp/$LATEST_BACKUP.tar.gz $LATEST_BACKUP

@@ -43,16 +43,14 @@ to an offsite host.
 Testing
 =======
 
-    $ bundle install
-    $ bundle exec berks install
-    $ bundle exec strainer test
+See SilverLining documentation
 
 License and Author
 ==================
 
 Author:: Jay Pipes (<jaypipes@att.com>)
 
-Copyright 2013, Jay Pipes
+Copyright 2013-2014, Jay Pipes
 
 Licensed under the Apache License, Version 2.0 (the "License");
 you may not use this file except in compliance with the License.

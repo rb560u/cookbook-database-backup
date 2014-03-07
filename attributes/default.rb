@@ -20,7 +20,6 @@
 default['database-backup']['mysql']['user'] = 'mysqlbackup'
 default['database-backup']['backup-dir'] = '/var/backups'
 default['database-backup']['staas']['account'] = 'silverlining'
-default['database-backup']['staas']['subtenant'] = '2468cc9edc67443584efd34622fac02e'
 default['database-backup']['staas']['userid'] = 'backup'
 default['database-backup']['staas']['directory'] = '<ZONE>'
 default['database-backup']['cron']['minute'] = 0

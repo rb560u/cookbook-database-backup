@@ -1,5 +1,5 @@
 account:   <%= node['database-backup']['staas']['account'] %>
-subtenant: <%= node['database-backup']['staas']['subtenant'] %>
+subtenant: <%= @staas_subid %>
 uid:       <%= node['database-backup']['staas']['userid'] %>
 key:       <%= @staas_secret %>
 site:      https://storage.synaptic.att.com/rest

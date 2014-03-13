@@ -80,7 +80,7 @@ key_path = "/etc/chef/encrypted_data_bag_secret"
 secret = ::Chef::EncryptedDataBagItem.load_secret key_path
 mysql_pass = ::Chef::EncryptedDataBagItem.load('user_passwords', mysql_user, secret)[mysql_user]
 staas_secret = ::Chef::EncryptedDataBagItem.load('secrets', 'staas_secret', secret)['staas_secret']
-stass_subid = ::Chef::EncryptedDataBagItem.load('secrets', 'staas_subid', secret)['staas_subid']
+staas_subid = ::Chef::EncryptedDataBagItem.load('secrets', 'staas_subid', secret)['staas_subid']
 
 template "/root/.synaptic4r" do
   source "synaptic4r.erb"

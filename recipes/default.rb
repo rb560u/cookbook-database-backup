@@ -110,3 +110,13 @@ cron 'backup_databases' do
   command "#{node['database-backup']['backup-dir']}/backup_databases"
   user 'root'
 end
+
+template '/usr/local/bin/synrest.mod' do
+  source 'synrest.erb'
+  owner 'root'
+  group 'root'
+  mode   00755
+  variables(
+    'proxy' => ENV['http_proxy']
+  )
+end

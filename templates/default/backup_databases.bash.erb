@@ -65,7 +65,7 @@ cd $BACKUP_DIR
 tar -zcf /tmp/$LATEST_BACKUP.tar.gz $LATEST_BACKUP
 
 echo "Sending backup archive offsite..."
-synrest create-file /tmp/$LATEST_BACKUP.tar.gz $STAAS_DIR/
+synrest.mod create-file /tmp/$LATEST_BACKUP.tar.gz $STAAS_DIR/
 rm /tmp/$LATEST_BACKUP.tar.gz
 
 echo "Clearing earliest backup directories..."

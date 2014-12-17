@@ -1,5 +1,5 @@
 Description
-===========
+===========@
 
 Installs/Configures Percona XtraBackup and sets up automated backups
 of MySQL databases.
